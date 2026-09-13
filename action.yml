@@ -19,6 +19,18 @@ inputs:
       project-specific profiles under [profiles]. Leave empty to use built-ins only.
     required: false
     default: ""
+  summary:
+    description: >-
+      Write an opt-in value-only validation summary to the GitHub Actions job
+      summary. Set to "true" to enable.
+    required: false
+    default: "false"
+  summary-columns:
+    description: >-
+      When summary is "true", include safely escaped evidence column labels.
+      Leave disabled when column names are sensitive.
+    required: false
+    default: "false"
 
 outputs:
   status:
@@ -27,6 +39,12 @@ outputs:
   receipt:
     description: Absolute path to the JSON validation receipt.
     value: ${{ steps.gate.outputs.receipt }}
+  tool-version:
+    description: Installed csv-quality-gate package version used for the receipt.
+    value: ${{ steps.gate.outputs.tool-version }}
+  summary-written:
+    description: Whether this invocation wrote the opt-in GitHub Actions summary.
+    value: ${{ steps.gate.outputs.summary-written }}
 
 runs:
   using: composite
@@ -45,6 +63,8 @@ runs:
         CSV_QUALITY_GATE_PATH: ${{ inputs.csv-path }}
         CSV_QUALITY_GATE_PROFILE: ${{ inputs.profile }}
         CSV_QUALITY_GATE_CONFIG: ${{ inputs.config }}
+        CSV_QUALITY_GATE_SUMMARY: ${{ inputs.summary }}
+        CSV_QUALITY_GATE_SUMMARY_COLUMNS: ${{ inputs.summary-columns }}
       run: |
         receipt="$GITHUB_WORKSPACE/csv-quality-gate-receipt.json"
         args=(check "$CSV_QUALITY_GATE_PATH" --profile "$CSV_QUALITY_GATE_PROFILE" --json)
@@ -63,4 +83,16 @@ runs:
         esac
         printf 'status=%s\n' "$status" >> "$GITHUB_OUTPUT"
         printf 'receipt=%s\n' "$receipt" >> "$GITHUB_OUTPUT"
+        tool_version="$(python -c 'from importlib.metadata import version; print(version("csv-quality-gate"))')"
+        printf 'tool-version=%s\n' "$tool_version" >> "$GITHUB_OUTPUT"
+        summary_written=false
+        if [ "$CSV_QUALITY_GATE_SUMMARY" = "true" ]; then
+          summary_args=(--receipt "$receipt" --tool-version "$tool_version")
+          if [ "$CSV_QUALITY_GATE_SUMMARY_COLUMNS" = "true" ]; then
+            summary_args+=(--include-columns)
+          fi
+          python -m csv_quality_gate.action_summary "${summary_args[@]}"
+          summary_written=true
+        fi
+        printf 'summary-written=%s\n' "$summary_written" >> "$GITHUB_OUTPUT"
         exit "$code"
