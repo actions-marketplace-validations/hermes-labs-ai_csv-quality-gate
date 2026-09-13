@@ -42,6 +42,25 @@ The process exits `0` on pass, `1` on warnings only, and `2` on fail, so you can
 
 ![csv-quality-gate preview](assets/preview.png)
 
+### Try it with the included fixtures
+
+You can verify the gate before connecting it to your own pipeline. From a
+checkout, install the package and run the included clean and broken inputs:
+
+```bash
+git clone https://github.com/hermes-labs-ai/csv-quality-gate.git
+cd csv-quality-gate
+python -m pip install .
+csv-quality-gate check examples/clean.csv
+csv-quality-gate check examples/promptfoo-dataset/tests-broken.csv \
+  --config examples/promptfoo-dataset/csv-quality-gate.toml \
+  --profile promptfoo
+```
+
+The first command exits `0` with `PASS`; the second exits `2` with bounded
+line-number evidence for the broken rows. This gives a first-use check without
+creating a sample CSV or guessing which profile and config to choose.
+
 ## Install
 
 ```bash
