@@ -1,0 +1,9 @@
+{
+  "name": "csv-quality-gate",
+  "version": "0.3.1",
+  "description": "CSV preflight validation and batch CSV quality checks that fail fast before pipeline runs.",
+  "author": { "name": "Hermes Labs", "email": "roli@hermes-labs.ai" },
+  "homepage": "https://hermes-labs.ai/open-source",
+  "repository": "https://github.com/hermes-labs-ai/csv-quality-gate",
+  "license": "MIT"
+}

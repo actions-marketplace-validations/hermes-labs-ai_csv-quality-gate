@@ -1,0 +1,19 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "csv-quality-gate",
+  "description": "The CSV Quality Gate Claude Code plugin from Hermes Labs.",
+  "owner": {
+    "name": "Hermes Labs",
+    "email": "roli@hermes-labs.ai",
+    "url": "https://github.com/hermes-labs-ai"
+  },
+  "plugins": [
+    {
+      "name": "csv-quality-gate",
+      "source": ".",
+      "description": "CSV preflight validation and batch CSV quality checks that fail fast before pipeline runs.",
+      "category": "development",
+      "homepage": "https://hermes-labs.ai/open-source"
+    }
+  ]
+}

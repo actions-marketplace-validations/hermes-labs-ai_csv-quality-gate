@@ -54,6 +54,35 @@ For development:
 pip install -e ".[dev]"
 ```
 
+### As an agent skill (Claude Code, Codex CLI, Gemini CLI)
+
+The repository root is a portable [Agent Plugin](https://agent-plugins.org)
+(`plugin.json`) that ships one skill, `skills/csv-quality-gate/SKILL.md`. It
+teaches the agent to run this gate on the CSV files you name and report the
+status and line-number evidence without overclaiming.
+
+| Host | Install | Read back |
+| --- | --- | --- |
+| Claude Code | `claude plugin marketplace add hermes-labs-ai/csv-quality-gate`<br>`claude plugin install csv-quality-gate@csv-quality-gate` | `claude plugin list` |
+| OpenAI Codex CLI | `codex plugin marketplace add hermes-labs-ai/csv-quality-gate`<br>`codex plugin add csv-quality-gate@csv-quality-gate` | `codex plugin list` |
+| Gemini CLI | `gemini extensions install https://github.com/hermes-labs-ai/csv-quality-gate --ref main` | `gemini skills list` |
+| skills.sh | `npx skills add https://github.com/hermes-labs-ai/csv-quality-gate --skill csv-quality-gate` | `npx skills list` |
+
+What each host reads:
+
+- Claude Code reads `.claude-plugin/marketplace.json` (source `.`) and
+  `.claude-plugin/plugin.json`.
+- Codex reads the repo marketplace `.agents/plugins/marketplace.json` (source
+  `./`, the root) and the portable `plugin.json`.
+- Gemini CLI reads `gemini-extension.json` and discovers the skill under
+  `skills/`. Keep `--ref main`: without a ref, Gemini CLI installs the latest
+  GitHub release archive, and releases up to v0.3.0 predate
+  `gemini-extension.json`.
+
+Installing the skill does not install the Python package. The skill uses an
+installed `csv-quality-gate` or runs the pinned release with
+`uvx csv-quality-gate==0.3.0`.
+
 ## Usage
 
 ```bash

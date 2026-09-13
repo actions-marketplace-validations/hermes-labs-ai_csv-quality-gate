@@ -46,6 +46,10 @@ Limits:
 Integrations:
 - pre-commit hook id `csv-quality-gate` (from `.pre-commit-hooks.yaml`)
 - Composite GitHub Action with `csv-path`, `profile`, and optional `config` inputs
+- Agent skill `skills/csv-quality-gate/SKILL.md` (portable Agent Plugin `plugin.json`):
+  - Claude Code: `claude plugin marketplace add hermes-labs-ai/csv-quality-gate` then `claude plugin install csv-quality-gate@csv-quality-gate`
+  - Codex CLI: `codex plugin marketplace add hermes-labs-ai/csv-quality-gate` then `codex plugin add csv-quality-gate@csv-quality-gate`
+  - Gemini CLI: `gemini extensions install https://github.com/hermes-labs-ai/csv-quality-gate --ref main`
 
 Part of the Hermes Labs reliability stack:
 - See https://github.com/hermes-labs-ai for the other open-source reliability tools. csv-quality-gate guards pipeline input data; it complements, and does not replace, the agent- and prompt-level tools in the stack.

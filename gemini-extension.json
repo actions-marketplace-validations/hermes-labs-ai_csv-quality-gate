@@ -1,0 +1,5 @@
+{
+  "name": "csv-quality-gate",
+  "version": "0.3.1",
+  "description": "CSV preflight validation and batch CSV quality checks that fail fast before pipeline runs."
+}
