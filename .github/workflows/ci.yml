@@ -76,13 +76,19 @@ jobs:
         with:
           csv-path: .github/fixtures/action-warn.csv
           profile: generic
+          summary: true
+          summary-columns: true
       - name: Assert warn action result
         env:
           OUTCOME: ${{ steps.warn.outcome }}
           STATUS: ${{ steps.warn.outputs.status }}
           RECEIPT: ${{ steps.warn.outputs.receipt }}
+          TOOL_VERSION: ${{ steps.warn.outputs.tool-version }}
+          SUMMARY_WRITTEN: ${{ steps.warn.outputs.summary-written }}
         run: |
           test "$OUTCOME" = failure && test "$STATUS" = warn
+          test -n "$TOOL_VERSION"
+          test "$SUMMARY_WRITTEN" = true
           python -c "import json,sys; r=json.load(open(sys.argv[1])); i=r['issues'][0]; assert i['evidence']['rows'], r" "$RECEIPT"
       - id: fail
         continue-on-error: true

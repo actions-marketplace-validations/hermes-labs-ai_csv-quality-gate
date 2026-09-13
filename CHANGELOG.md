@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Added an opt-in composite Action job summary with status, profile, row count,
+  issue counts, and an opt-in bounded evidence-column list. The JSON receipt and
+  CLI exit codes are unchanged; the Action also exposes an additive
+  `tool-version` output.
 - The composite Action declares `author` and Marketplace `branding` in
   `action.yml`; inputs, outputs, and behavior are unchanged.
 - Added ecosystem recipes with one passing and one failing fixture each:

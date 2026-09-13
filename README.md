@@ -268,6 +268,14 @@ to upload as a workflow artifact.
 Use `continue-on-error: true` on a calling step if your workflow needs to inspect
 warning or failure outputs before deciding how to proceed.
 
+Set `summary: true` to write a compact result to the GitHub Actions job summary.
+It contains only status, profile, row count, and issue counts; it never includes
+the CSV path or cell values. Evidence column labels are omitted unless you also
+set `summary-columns: true`; enable that only when those labels are suitable for
+the job summary. The additive `tool-version` and `summary-written` outputs
+identify the installed package version and whether this invocation rendered the
+summary; the JSON receipt is unchanged.
+
 The receipt path is fixed per workspace, so do not run more than one instance in
 parallel in the same workspace. The Action validates the package's existing CSV
 heuristics only; it does not add schema inference, semantic verification, or
