@@ -100,7 +100,7 @@ What each host reads:
 
 Installing the skill does not install the Python package. The skill uses an
 installed `csv-quality-gate` or runs the pinned release with
-`uvx csv-quality-gate==0.3.0`.
+`uvx csv-quality-gate==0.3.1`.
 
 ## Usage
 
@@ -259,7 +259,7 @@ your `.pre-commit-config.yaml` (full example in
 ```yaml
 repos:
   - repo: https://github.com/hermes-labs-ai/csv-quality-gate
-    rev: v0.3.0
+    rev: v0.3.1
     hooks:
       - id: csv-quality-gate
         args: [--profile, outreach]
@@ -299,7 +299,7 @@ outputs remain available even when the Action exits with a warning or failure.
 
 ```yaml
 - id: csv_gate
-  uses: hermes-labs-ai/csv-quality-gate@v0.3.0
+  uses: hermes-labs-ai/csv-quality-gate@v0.3.1
   with:
     csv-path: data/leads.csv
     profile: leads
@@ -339,7 +339,7 @@ description, author, branding). Listing is a maintainer step taken on the GitHub
 release form, not something the repository does on its own; the steps are in
 [Releasing](CONTRIBUTING.md#releasing). Whether you reach the Action through
 Marketplace or this repository, the `uses:` line above is the same: pin a
-release tag (`@v0.3.0`) or a commit SHA.
+release tag (`@v0.3.1`) or a commit SHA.
 
 ## Recipes
 

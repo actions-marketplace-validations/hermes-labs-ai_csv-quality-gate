@@ -79,7 +79,7 @@ As a pre-commit hook, limit the hook to the seeds directory:
 ```yaml
 repos:
   - repo: https://github.com/hermes-labs-ai/csv-quality-gate
-    rev: v0.3.0
+    rev: v0.3.1
     hooks:
       - id: csv-quality-gate
         args: [--config, csv-quality-gate.toml, --profile, seed]
@@ -90,7 +90,7 @@ In GitHub Actions, run the composite Action (one file per step) before the step
 that calls `dbt seed`:
 
 ```yaml
-- uses: hermes-labs-ai/csv-quality-gate@v0.3.0
+- uses: hermes-labs-ai/csv-quality-gate@v0.3.1
   with:
     csv-path: seeds/country_codes.csv
     profile: seed

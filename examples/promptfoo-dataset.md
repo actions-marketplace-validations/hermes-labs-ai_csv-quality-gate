@@ -88,7 +88,7 @@ As a pre-commit hook, limit the hook to the dataset:
 ```yaml
 repos:
   - repo: https://github.com/hermes-labs-ai/csv-quality-gate
-    rev: v0.3.0
+    rev: v0.3.1
     hooks:
       - id: csv-quality-gate
         args: [--config, csv-quality-gate.toml, --profile, promptfoo]
@@ -99,7 +99,7 @@ In GitHub Actions, run the composite Action before the step that calls
 `promptfoo eval`:
 
 ```yaml
-- uses: hermes-labs-ai/csv-quality-gate@v0.3.0
+- uses: hermes-labs-ai/csv-quality-gate@v0.3.1
   with:
     csv-path: tests.csv
     profile: promptfoo

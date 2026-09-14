@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 0.3.1 - 2026-09-12
 
 - The repository root is now a portable Agent Plugin (`plugin.json`, Agent
   Plugins 1.0.0) with Claude Code, Codex CLI, and Gemini CLI manifests that all
