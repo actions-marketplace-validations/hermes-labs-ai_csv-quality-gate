@@ -9,6 +9,6 @@
   "programmingLanguage": "Python",
   "runtimePlatform": "Python >=3.10",
   "author": [{"@type": "Person", "givenName": "Rolando", "familyName": "Bosch Rodriguez", "identifier": "https://orcid.org/0009-0005-4896-1112"}],
-  "url": "https://pypi.org/project/csv-quality-gate/0.3.0/",
+  "url": "https://pypi.org/project/csv-quality-gate/0.3.1/",
   "keywords": ["ai-reliability", "ci", "cli", "csv", "data-quality", "data-validation", "developer-tools", "etl", "hermes-labs", "llm-ops", "ml-pipeline", "pipeline", "preflight", "python", "quality-gate", "validation"]
 }

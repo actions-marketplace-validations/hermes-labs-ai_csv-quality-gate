@@ -11,8 +11,8 @@ and sends no network requests
 
 1. Pick a runner: if `csv-quality-gate --help` works, use the bare
    `csv-quality-gate` command below. Otherwise use
-   `uvx csv-quality-gate==0.3.0` (zero-install, no PATH changes), or
-   `pipx install csv-quality-gate==0.3.0` if the user wants it installed
+   `uvx csv-quality-gate==0.3.1` (zero-install, no PATH changes), or
+   `pipx install csv-quality-gate==0.3.1` if the user wants it installed
    persistently. Keep the exact version pin so neither fetches an unreviewed
    newer release, and keep using the runner you picked for every step.
 2. Only check files the user named or clearly pointed at. Choose the profile:
