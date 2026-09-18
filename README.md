@@ -61,17 +61,11 @@ The first command exits `0` with `PASS`; the second exits `2` with bounded
 line-number evidence for the broken rows. This gives a first-use check without
 creating a sample CSV or guessing which profile and config to choose.
 
-## Install
+## Development installation
 
-```bash
-pip install csv-quality-gate
-```
-
-For development:
-
-```bash
-pip install -e ".[dev]"
-```
+For everyday use, follow the [Quickstart](#quickstart-60-seconds) above. For a
+source checkout, editable install, and lint/test commands, see
+[Development](#development) below.
 
 ### As an agent skill (Claude Code, Codex CLI, Gemini CLI)
 
