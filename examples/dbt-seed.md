@@ -90,7 +90,7 @@ In GitHub Actions, run the composite Action (one file per step) before the step
 that calls `dbt seed`:
 
 ```yaml
-- uses: hermes-labs-ai/csv-quality-gate@v0.3.1
+- uses: hermes-labs-ai/csv-quality-gate@0b7bf4635b2db468620855e577cd0d9f09f09ec7 # hardened current main
   with:
     csv-path: seeds/country_codes.csv
     profile: seed

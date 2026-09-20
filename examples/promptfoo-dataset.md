@@ -99,7 +99,7 @@ In GitHub Actions, run the composite Action before the step that calls
 `promptfoo eval`:
 
 ```yaml
-- uses: hermes-labs-ai/csv-quality-gate@v0.3.1
+- uses: hermes-labs-ai/csv-quality-gate@0b7bf4635b2db468620855e577cd0d9f09f09ec7 # hardened current main
   with:
     csv-path: tests.csv
     profile: promptfoo
