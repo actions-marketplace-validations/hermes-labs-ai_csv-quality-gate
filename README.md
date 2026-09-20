@@ -293,7 +293,7 @@ outputs remain available even when the Action exits with a warning or failure.
 
 ```yaml
 - id: csv_gate
-  uses: hermes-labs-ai/csv-quality-gate@400bfbeb527a3fd4ed48ce769908861802917ac6 # supports bounded batch annotations
+  uses: hermes-labs-ai/csv-quality-gate@0b7bf4635b2db468620855e577cd0d9f09f09ec7 # hardened current main; annotations + batch
   with:
     csv-path: data/leads.csv
     profile: leads
@@ -309,7 +309,7 @@ or shell arguments.
 
 ```yaml
 - id: csv_gate_batch
-  uses: hermes-labs-ai/csv-quality-gate@76cab5cb5b082f0826f1747bd9b07b0384f78ab6 # batch support
+  uses: hermes-labs-ai/csv-quality-gate@0b7bf4635b2db468620855e577cd0d9f09f09ec7 # hardened current main; batch support
   with:
     csv-paths: |
       data/leads.csv
@@ -346,7 +346,7 @@ Paths outside the checked-out workspace and issues without row evidence are not
 annotated. Receipts larger than 1 MiB are skipped without changing the gate's
 status. This is an advisory location aid, not a security or SARIF report.
 
-A ready-to-copy install-based workflow also lives in
+A ready-to-copy, commit-pinned composite Action workflow also lives in
 [`examples/github-action.yml`](examples/github-action.yml).
 
 ### GitHub Marketplace
