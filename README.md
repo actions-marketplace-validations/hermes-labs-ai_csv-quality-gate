@@ -355,8 +355,7 @@ A ready-to-copy, commit-pinned composite Action workflow also lives in
 description, author, branding). Listing is a maintainer step taken on the GitHub
 release form, not something the repository does on its own; the steps are in
 [Releasing](CONTRIBUTING.md#releasing). Whether you reach the Action through
-Marketplace or this repository, the `uses:` line above is the same: pin a
-release tag (`@v0.3.1`) or a commit SHA.
+Marketplace or this repository, use a full commit SHA in the `uses:` line.
 
 ## Recipes
 

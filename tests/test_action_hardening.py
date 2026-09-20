@@ -29,3 +29,10 @@ def test_copyable_workflows_pin_the_hardened_action_commit():
         refs = _uses(ROOT / relative_path)
         assert expected in refs, relative_path
         assert all(IMMUTABLE_ACTION_PATTERN.fullmatch(ref) for ref in refs), relative_path
+
+
+def test_marketplace_guidance_recommends_only_commit_pins():
+    readme = (ROOT / "README.md").read_text()
+    marketplace = readme.split("### GitHub Marketplace", 1)[1].split("## Recipes", 1)[0]
+    assert "release tag" not in marketplace
+    assert "use a full commit SHA" in marketplace
