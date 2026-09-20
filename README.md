@@ -308,7 +308,7 @@ or shell arguments.
 
 ```yaml
 - id: csv_gate_batch
-  uses: hermes-labs-ai/csv-quality-gate@v0.3.1
+  uses: hermes-labs-ai/csv-quality-gate@76cab5cb5b082f0826f1747bd9b07b0384f78ab6 # batch support
   with:
     csv-paths: |
       data/leads.csv
