@@ -79,6 +79,7 @@ jobs:
             .github/fixtures/action-warn.csv
           profile: generic
           summary: true
+          annotate: true
       - name: Assert batch action result
         env:
           OUTCOME: ${{ steps.batch.outcome }}

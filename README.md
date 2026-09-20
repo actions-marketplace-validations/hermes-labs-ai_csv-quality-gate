@@ -293,11 +293,12 @@ outputs remain available even when the Action exits with a warning or failure.
 
 ```yaml
 - id: csv_gate
-  uses: hermes-labs-ai/csv-quality-gate@v0.3.1
+  uses: hermes-labs-ai/csv-quality-gate@400bfbeb527a3fd4ed48ce769908861802917ac6 # supports bounded batch annotations
   with:
     csv-path: data/leads.csv
     profile: leads
     config: csv-quality-gate.toml   # optional; omit to use built-in profiles
+    annotate: true                  # optional; defaults to false
 
 - run: echo "${{ steps.csv_gate.outputs.status }}"
 ```
@@ -337,6 +338,13 @@ The receipt path is fixed per workspace, so do not run more than one instance in
 parallel in the same workspace. The Action validates the package's existing CSV
 heuristics only; it does not add schema inference, semantic verification, or
 arbitrary CLI options.
+
+Set `annotate: true` to add up to 50 GitHub Actions warnings or errors at the
+receipt-backed CSV file and physical row. The annotations use the gate's existing
+bounded evidence only and omit cell values, issue messages, and column names.
+Paths outside the checked-out workspace and issues without row evidence are not
+annotated. Receipts larger than 1 MiB are skipped without changing the gate's
+status. This is an advisory location aid, not a security or SARIF report.
 
 A ready-to-copy install-based workflow also lives in
 [`examples/github-action.yml`](examples/github-action.yml).

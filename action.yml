@@ -40,6 +40,12 @@ inputs:
       Leave disabled when column names are sensitive.
     required: false
     default: "false"
+  annotate:
+    description: >-
+      Emit opt-in, bounded GitHub file/row annotations from receipt-backed CSV
+      evidence. Set to "true" to enable; annotations omit cell values and issue text.
+    required: false
+    default: "false"
 
 outputs:
   status:
@@ -75,6 +81,7 @@ runs:
         CSV_QUALITY_GATE_CONFIG: ${{ inputs.config }}
         CSV_QUALITY_GATE_SUMMARY: ${{ inputs.summary }}
         CSV_QUALITY_GATE_SUMMARY_COLUMNS: ${{ inputs.summary-columns }}
+        CSV_QUALITY_GATE_ANNOTATE: ${{ inputs.annotate }}
       run: |
         receipt="$GITHUB_WORKSPACE/csv-quality-gate-receipt.json"
         if [ -n "$CSV_QUALITY_GATE_PATH" ] && [ -n "$CSV_QUALITY_GATE_PATHS" ]; then
@@ -119,6 +126,10 @@ runs:
           fi
           python -m csv_quality_gate.action_summary "${summary_args[@]}"
           summary_written=true
+        fi
+        if [ "$CSV_QUALITY_GATE_ANNOTATE" = "true" ]; then
+          python -m csv_quality_gate.action_annotations \
+            --receipt "$receipt" --workspace "$GITHUB_WORKSPACE"
         fi
         printf 'summary-written=%s\n' "$summary_written" >> "$GITHUB_OUTPUT"
         exit "$code"
