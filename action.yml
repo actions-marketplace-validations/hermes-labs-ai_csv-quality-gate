@@ -81,24 +81,24 @@ runs:
           echo "Set exactly one of csv-path or csv-paths." >&2
           exit 2
         fi
-        args=(check)
+        paths=()
         if [ -n "$CSV_QUALITY_GATE_PATH" ]; then
-          args+=("$CSV_QUALITY_GATE_PATH")
+          paths+=("$CSV_QUALITY_GATE_PATH")
         elif [ -n "$CSV_QUALITY_GATE_PATHS" ]; then
           while IFS= read -r csv_path || [ -n "$csv_path" ]; do
-            [ -n "$csv_path" ] && args+=("$csv_path")
+            [ -n "$csv_path" ] && paths+=("$csv_path")
           done <<< "$CSV_QUALITY_GATE_PATHS"
         fi
-        if [ "${#args[@]}" -eq 1 ]; then
+        if [ "${#paths[@]}" -eq 0 ]; then
           echo "Set exactly one of csv-path or csv-paths." >&2
           exit 2
         fi
-        args+=(--profile "$CSV_QUALITY_GATE_PROFILE" --json)
+        args=(check --profile "$CSV_QUALITY_GATE_PROFILE" --json)
         if [ -n "$CSV_QUALITY_GATE_CONFIG" ]; then
           args+=(--config "$CSV_QUALITY_GATE_CONFIG")
         fi
         set +e
-        csv-quality-gate "${args[@]}" > "$receipt"
+        csv-quality-gate "${args[@]}" -- "${paths[@]}" > "$receipt"
         code=$?
         set -e
         case "$code" in
