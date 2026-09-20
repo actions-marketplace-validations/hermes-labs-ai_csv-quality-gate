@@ -293,7 +293,7 @@ outputs remain available even when the Action exits with a warning or failure.
 
 ```yaml
 - id: csv_gate
-  uses: hermes-labs-ai/csv-quality-gate@479dc1c1e0b0fd7bed8fc3259c0f8aec2b3c79a2 # supports batch input and annotations
+  uses: hermes-labs-ai/csv-quality-gate@400bfbeb527a3fd4ed48ce769908861802917ac6 # supports bounded batch annotations
   with:
     csv-path: data/leads.csv
     profile: leads
@@ -343,7 +343,8 @@ Set `annotate: true` to add up to 50 GitHub Actions warnings or errors at the
 receipt-backed CSV file and physical row. The annotations use the gate's existing
 bounded evidence only and omit cell values, issue messages, and column names.
 Paths outside the checked-out workspace and issues without row evidence are not
-annotated. This is an advisory location aid, not a security or SARIF report.
+annotated. Receipts larger than 1 MiB are skipped without changing the gate's
+status. This is an advisory location aid, not a security or SARIF report.
 
 A ready-to-copy install-based workflow also lives in
 [`examples/github-action.yml`](examples/github-action.yml).
