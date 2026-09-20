@@ -1,5 +1,5 @@
 name: CSV quality gate
-description: Validate one CSV with csv-quality-gate and write a JSON receipt.
+description: Validate one or more CSV files with csv-quality-gate and write a JSON receipt.
 author: Hermes Labs
 branding:
   icon: check-circle
@@ -7,8 +7,17 @@ branding:
 
 inputs:
   csv-path:
-    description: Path to the CSV file to validate, relative to the workspace or absolute.
-    required: true
+    description: >-
+      Path to one CSV file to validate, relative to the workspace or absolute.
+      Set exactly one of csv-path or csv-paths.
+    required: false
+    default: ""
+  csv-paths:
+    description: >-
+      Newline-separated paths to CSV files to validate, relative to the workspace
+      or absolute. Set exactly one of csv-path or csv-paths.
+    required: false
+    default: ""
   profile:
     description: Validation profile to run (a built-in or one declared in `config`).
     required: false
@@ -61,13 +70,30 @@ runs:
       shell: bash
       env:
         CSV_QUALITY_GATE_PATH: ${{ inputs.csv-path }}
+        CSV_QUALITY_GATE_PATHS: ${{ inputs.csv-paths }}
         CSV_QUALITY_GATE_PROFILE: ${{ inputs.profile }}
         CSV_QUALITY_GATE_CONFIG: ${{ inputs.config }}
         CSV_QUALITY_GATE_SUMMARY: ${{ inputs.summary }}
         CSV_QUALITY_GATE_SUMMARY_COLUMNS: ${{ inputs.summary-columns }}
       run: |
         receipt="$GITHUB_WORKSPACE/csv-quality-gate-receipt.json"
-        args=(check "$CSV_QUALITY_GATE_PATH" --profile "$CSV_QUALITY_GATE_PROFILE" --json)
+        if [ -n "$CSV_QUALITY_GATE_PATH" ] && [ -n "$CSV_QUALITY_GATE_PATHS" ]; then
+          echo "Set exactly one of csv-path or csv-paths." >&2
+          exit 2
+        fi
+        args=(check)
+        if [ -n "$CSV_QUALITY_GATE_PATH" ]; then
+          args+=("$CSV_QUALITY_GATE_PATH")
+        elif [ -n "$CSV_QUALITY_GATE_PATHS" ]; then
+          while IFS= read -r csv_path || [ -n "$csv_path" ]; do
+            [ -n "$csv_path" ] && args+=("$csv_path")
+          done <<< "$CSV_QUALITY_GATE_PATHS"
+        fi
+        if [ "${#args[@]}" -eq 1 ]; then
+          echo "Set exactly one of csv-path or csv-paths." >&2
+          exit 2
+        fi
+        args+=(--profile "$CSV_QUALITY_GATE_PROFILE" --json)
         if [ -n "$CSV_QUALITY_GATE_CONFIG" ]; then
           args+=(--config "$CSV_QUALITY_GATE_CONFIG")
         fi

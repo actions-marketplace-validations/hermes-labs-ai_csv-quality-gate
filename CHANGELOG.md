@@ -1,5 +1,14 @@
 # Changelog
 
+## Unreleased
+
+- The composite GitHub Action now accepts newline-separated `csv-paths` for a
+  batch check. `csv-path` remains supported for one file; exactly one path input
+  is required. Batch receipts are JSON arrays and retain the CLI's worst-status
+  exit behavior.
+- Opt-in Action summaries now aggregate batch receipts without exposing paths
+  or issue messages.
+
 ## 0.3.1 - 2026-09-12
 
 - The repository root is now a portable Agent Plugin (`plugin.json`, Agent

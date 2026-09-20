@@ -70,6 +70,25 @@ jobs:
           OUTCOME: ${{ steps.pass.outcome }}
           STATUS: ${{ steps.pass.outputs.status }}
         run: test "$OUTCOME" = success && test "$STATUS" = pass
+      - id: batch
+        continue-on-error: true
+        uses: ./
+        with:
+          csv-paths: |
+            .github/fixtures/action-pass.csv
+            .github/fixtures/action-warn.csv
+          profile: generic
+          summary: true
+      - name: Assert batch action result
+        env:
+          OUTCOME: ${{ steps.batch.outcome }}
+          STATUS: ${{ steps.batch.outputs.status }}
+          RECEIPT: ${{ steps.batch.outputs.receipt }}
+          SUMMARY_WRITTEN: ${{ steps.batch.outputs.summary-written }}
+        run: |
+          test "$OUTCOME" = failure && test "$STATUS" = warn
+          test "$SUMMARY_WRITTEN" = true
+          python -c "import json,sys; r=json.load(open(sys.argv[1])); assert isinstance(r, list) and [x['status'] for x in r] == ['pass', 'warn'], r" "$RECEIPT"
       - id: warn
         continue-on-error: true
         uses: ./
