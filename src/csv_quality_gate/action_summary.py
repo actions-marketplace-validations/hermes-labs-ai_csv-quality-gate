@@ -33,7 +33,9 @@ def render_summary(
 ) -> str:
     """Return a value-only summary that deliberately omits paths and issue messages."""
     if isinstance(receipt, list):
-        return _render_many_summary(receipt, include_columns=include_columns, tool_version=tool_version)
+        return _render_many_summary(
+            receipt, include_columns=include_columns, tool_version=tool_version
+        )
     if not isinstance(receipt, dict):
         raise ValueError("Action receipt must be a JSON object or array of objects")
     issues = receipt.get("issues", [])
