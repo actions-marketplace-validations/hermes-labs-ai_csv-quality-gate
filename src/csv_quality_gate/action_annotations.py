@@ -9,6 +9,7 @@ from pathlib import Path
 from typing import Any
 
 MAX_ANNOTATIONS = 50
+MAX_RECEIPT_BYTES = 1024 * 1024
 _SEVERITIES = {"error": "error", "warning": "warning"}
 _MESSAGE = "CSV quality gate detected an affected row."
 
@@ -73,8 +74,12 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--workspace", required=True, type=Path)
     args = parser.parse_args(argv)
     try:
-        receipt: Any = json.loads(args.receipt.read_text(encoding="utf-8"))
-    except (OSError, json.JSONDecodeError) as error:
+        with args.receipt.open("rb") as receipt_file:
+            raw_receipt = receipt_file.read(MAX_RECEIPT_BYTES + 1)
+        if len(raw_receipt) > MAX_RECEIPT_BYTES:
+            return 0
+        receipt: Any = json.loads(raw_receipt.decode("utf-8"))
+    except (OSError, UnicodeDecodeError, json.JSONDecodeError) as error:
         parser.error(f"could not read receipt: {error}")
     for command in workflow_commands(receipt, args.workspace):
         print(command)

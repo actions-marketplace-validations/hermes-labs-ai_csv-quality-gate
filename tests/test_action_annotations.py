@@ -1,4 +1,9 @@
-from csv_quality_gate.action_annotations import MAX_ANNOTATIONS, workflow_commands
+from csv_quality_gate.action_annotations import (
+    MAX_ANNOTATIONS,
+    MAX_RECEIPT_BYTES,
+    main,
+    workflow_commands,
+)
 
 
 def test_annotations_use_only_workspace_paths_rows_and_severity(tmp_path):
@@ -42,3 +47,11 @@ def test_annotations_skip_outside_paths_and_bound_output(tmp_path):
         )
     )
     assert len(commands) == MAX_ANNOTATIONS
+
+
+def test_oversized_receipt_emits_no_annotations_and_preserves_gate_status(tmp_path, capsys):
+    receipt = tmp_path / "receipt.json"
+    receipt.write_bytes(b"x" * (MAX_RECEIPT_BYTES + 1))
+
+    assert main(["--receipt", str(receipt), "--workspace", str(tmp_path)]) == 0
+    assert capsys.readouterr().out == ""
