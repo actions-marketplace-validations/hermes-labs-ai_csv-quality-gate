@@ -13,6 +13,7 @@ MAX_DYNAMIC_VALUE_CHARS = 120
 MAX_EVIDENCE_COLUMNS = 8
 MAX_SUMMARY_CHARS = 4_096
 _TRUNCATION_MARKER = "… (truncated)"
+_STATUS_ORDER = {"pass": 0, "warn": 1, "fail": 2}
 
 
 def _markdown_text(value: object) -> str:
@@ -27,9 +28,16 @@ def _markdown_text(value: object) -> str:
 
 
 def render_summary(
-    receipt: dict[str, Any], *, include_columns: bool = False, tool_version: str = "unknown"
+    receipt: dict[str, Any] | list[dict[str, Any]], *, include_columns: bool = False,
+    tool_version: str = "unknown",
 ) -> str:
     """Return a value-only summary that deliberately omits paths and issue messages."""
+    if isinstance(receipt, list):
+        return _render_many_summary(
+            receipt, include_columns=include_columns, tool_version=tool_version
+        )
+    if not isinstance(receipt, dict):
+        raise ValueError("Action receipt must be a JSON object or array of objects")
     issues = receipt.get("issues", [])
     if not isinstance(issues, list):
         raise ValueError("receipt issues must be a list")
@@ -66,6 +74,71 @@ def render_summary(
     return _bounded_summary(rows)
 
 
+def _render_many_summary(
+    receipts: list[dict[str, Any]], *, include_columns: bool, tool_version: str
+) -> str:
+    """Summarize a batch receipt without disclosing its source paths or issue text."""
+    if not receipts:
+        raise ValueError("Action receipt array must contain at least one object")
+    if not all(isinstance(receipt, dict) for receipt in receipts):
+        raise ValueError("Action receipt array must contain only objects")
+
+    profiles: set[str] = set()
+    statuses: list[str] = []
+    total_rows = 0
+    total_issues = 0
+    error_count = 0
+    warning_count = 0
+    columns: list[str] = []
+    for receipt in receipts:
+        issues = receipt.get("issues", [])
+        if not isinstance(issues, list):
+            raise ValueError("receipt issues must be a list")
+        status = receipt.get("status")
+        if not isinstance(status, str) or status not in _STATUS_ORDER:
+            raise ValueError("receipt status must be pass, warn, or fail")
+        rows = receipt.get("rows")
+        if not isinstance(rows, int) or isinstance(rows, bool) or rows < 0:
+            raise ValueError("receipt rows must be a non-negative integer")
+        profile = receipt.get("profile")
+        if not isinstance(profile, str):
+            raise ValueError("receipt profile must be a string")
+        profiles.add(profile)
+        statuses.append(status)
+        total_rows += rows
+        total_issues += len(issues)
+        error_count += sum(
+            isinstance(issue, dict) and issue.get("severity") == "error" for issue in issues
+        )
+        warning_count += sum(
+            isinstance(issue, dict) and issue.get("severity") == "warning" for issue in issues
+        )
+        if include_columns:
+            for issue in issues:
+                evidence = issue.get("evidence") if isinstance(issue, dict) else None
+                column = evidence.get("column") if isinstance(evidence, dict) else None
+                if (
+                    isinstance(column, str)
+                    and column not in columns
+                    and len(columns) < MAX_EVIDENCE_COLUMNS
+                ):
+                    columns.append(column)
+
+    rows = [
+        ("Tool", f"csv-quality-gate {tool_version}"),
+        ("Status", max(statuses, key=_STATUS_ORDER.__getitem__)),
+        ("Profile", profiles.pop() if len(profiles) == 1 else "multiple"),
+        ("Files", len(receipts)),
+        ("Rows", total_rows),
+        ("Issues", total_issues),
+        ("Errors", error_count),
+        ("Warnings", warning_count),
+    ]
+    if include_columns:
+        rows.extend(("Evidence column", column) for column in columns)
+    return _bounded_summary(rows)
+
+
 def _bounded_summary(rows: list[tuple[str, object]]) -> str:
     """Keep the job summary bounded even if a receipt was externally edited."""
     summary = _table(rows)
@@ -95,8 +168,8 @@ def main(argv: list[str] | None = None) -> int:
     args = parser.parse_args(argv)
 
     receipt = json.loads(args.receipt.read_text())
-    if not isinstance(receipt, dict):
-        raise ValueError("Action receipt must be a JSON object")
+    if not isinstance(receipt, (dict, list)):
+        raise ValueError("Action receipt must be a JSON object or array of objects")
     summary_path = os.environ.get("GITHUB_STEP_SUMMARY")
     if not summary_path:
         raise RuntimeError("GITHUB_STEP_SUMMARY is not set")

@@ -84,3 +84,41 @@ def test_summary_bounds_untrusted_dynamic_values_and_evidence_columns():
     assert "…" in summary
     assert f"column\\-{MAX_EVIDENCE_COLUMNS - 1}" in summary
     assert f"column\\-{MAX_EVIDENCE_COLUMNS}" not in summary
+
+
+def test_batch_summary_aggregates_a_multi_file_receipt_without_source_data():
+    summary = render_summary(
+        [
+            {
+                "path": "/private/pass.csv",
+                "profile": "generic",
+                "rows": 4,
+                "status": "pass",
+                "issues": [],
+            },
+            {
+                "path": "/private/warn.csv",
+                "profile": "generic",
+                "rows": 3,
+                "status": "warn",
+                "issues": [
+                    {
+                        "severity": "warning",
+                        "message": "private cell value",
+                        "evidence": {"column": "email", "total": 1, "rows": [2]},
+                    }
+                ],
+            },
+        ],
+        include_columns=True,
+    )
+
+    assert "| Status | warn |" in summary
+    assert "| Profile | generic |" in summary
+    assert "| Files | 2 |" in summary
+    assert "| Rows | 7 |" in summary
+    assert "| Issues | 1 |" in summary
+    assert "| Errors | 0 |" in summary
+    assert "| Warnings | 1 |" in summary
+    assert "| Evidence column | email |" in summary
+    assert "private" not in summary

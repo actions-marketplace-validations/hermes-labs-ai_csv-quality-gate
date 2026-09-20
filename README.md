@@ -302,8 +302,23 @@ outputs remain available even when the Action exits with a warning or failure.
 - run: echo "${{ steps.csv_gate.outputs.status }}"
 ```
 
-The only inputs are `csv-path`, `profile`, and the optional `config` file path;
-the Action deliberately accepts no free-form command or shell arguments. It
+For a batch, use `csv-paths` with one path per line instead. Set exactly one of
+`csv-path` and `csv-paths`; the Action deliberately accepts no free-form command
+or shell arguments.
+
+```yaml
+- id: csv_gate_batch
+  uses: hermes-labs-ai/csv-quality-gate@v0.3.1
+  with:
+    csv-paths: |
+      data/leads.csv
+      data/customers.csv
+    profile: generic
+```
+
+The single-file receipt remains a JSON object. A batch receipt is a JSON array
+in the same order as `csv-paths`, and its status and exit code reflect the worst
+file. The Action
 returns the same exit codes as the CLI: `0` for pass, `1` for warn, and `2` for
 fail. The receipt contains the same bounded evidence as `--json`, so it is safe
 to upload as a workflow artifact.
