@@ -7,6 +7,10 @@
 
 csv-quality-gate is a command-line data quality gate that runs CSV preflight validation, failing fast before a pipeline ingests broken, incomplete, duplicated, or junk input.
 
+csv-quality-gate is developed by [Hermes Labs](https://hermes-labs.ai).
+
+Hermes Labs studies failure modes in agent and LLM systems, develops open-source tools that treat language as part of the runtime, and works with teams to remediate reliability failures in production.
+
 It runs batch quality checks on a CSV and returns `pass`, `warn`, or `fail` (with matching exit codes) before expensive pipeline steps burn time on bad input. It checks for missing required columns, empty files, empty critical cells, duplicate rows, and — under the `outreach` profile — suspicious company-name patterns. Teams can declare their own columns, thresholds, and patterns in a small TOML/JSON config, every issue points at the affected line numbers (never cell values), and the same gate runs as a pre-commit hook or a GitHub Action. It is stdlib-only: no third-party runtime dependencies.
 
 The problems it is built for:
@@ -376,13 +380,11 @@ python3 -m pytest -q
 pre-commit try-repo . csv-quality-gate --files tests/fixtures/clean.csv   # optional hook smoke test
 ```
 
-## Part of the Hermes Labs reliability stack
+## Where it fits
 
-csv-quality-gate is part of the [Hermes Labs](https://github.com/hermes-labs-ai) reliability stack — open-source tools that catch silent failure modes in production AI and data pipelines. csv-quality-gate guards the data that goes into a pipeline; it is complementary to, not a replacement for, the agent- and prompt-level tools in the stack.
+csv-quality-gate guards the data that goes into a pipeline; it is complementary to, not a replacement for, agent- and prompt-level reliability tools.
 
-## About Hermes Labs
-
-[Hermes Labs](https://hermes-labs.ai) is an AI reliability engineering studio for product and engineering teams shipping production agents and LLM applications. We find the structural AI failures standard evals miss, then harden retrieval, memory, agents, and the language layers around production AI systems with runtime controls and defensible evidence.
+## More from Hermes Labs
 
 Browse the [open-source catalog](https://hermes-labs.ai/open-source) or contact [roli@hermes-labs.ai](mailto:roli@hermes-labs.ai).
 
