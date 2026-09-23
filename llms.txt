@@ -55,4 +55,4 @@ Part of the Hermes Labs reliability stack:
 - See https://github.com/hermes-labs-ai for the other open-source reliability tools. csv-quality-gate guards pipeline input data; it complements, and does not replace, the agent- and prompt-level tools in the stack.
 
 About Hermes Labs:
-- Hermes Labs studies failure modes in agent and LLM systems, develops open-source tools that treat language as part of the runtime, and works with teams to remediate reliability failures in production. More at https://hermes-labs.ai
+- Hermes Labs is an agentic infrastructure company building the reliability layer for autonomous systems. More at https://hermes-labs.ai

@@ -1,15 +1,19 @@
-# csv-quality-gate
+<div align="center">
+
+<h1>csv-quality-gate</h1>
+
+csv-quality-gate is a command-line data quality gate that runs CSV preflight validation, failing fast before a pipeline ingests broken, incomplete, duplicated, or junk input.
+
+csv-quality-gate is developed by [Hermes Labs](https://hermes-labs.ai).
+
+Hermes Labs is an agentic infrastructure company building the reliability layer for autonomous systems.
 
 [![CI](https://github.com/hermes-labs-ai/csv-quality-gate/actions/workflows/ci.yml/badge.svg)](https://github.com/hermes-labs-ai/csv-quality-gate/actions/workflows/ci.yml)
 [![PyPI](https://img.shields.io/pypi/v/csv-quality-gate.svg)](https://pypi.org/project/csv-quality-gate/)
 [![Python](https://img.shields.io/pypi/pyversions/csv-quality-gate.svg)](https://pypi.org/project/csv-quality-gate/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
-csv-quality-gate is a command-line data quality gate that runs CSV preflight validation, failing fast before a pipeline ingests broken, incomplete, duplicated, or junk input.
-
-csv-quality-gate is developed by [Hermes Labs](https://hermes-labs.ai).
-
-Hermes Labs studies failure modes in agent and LLM systems, develops open-source tools that treat language as part of the runtime, and works with teams to remediate reliability failures in production.
+</div>
 
 It runs batch quality checks on a CSV and returns `pass`, `warn`, or `fail` (with matching exit codes) before expensive pipeline steps burn time on bad input. It checks for missing required columns, empty files, empty critical cells, duplicate rows, and — under the `outreach` profile — suspicious company-name patterns. Teams can declare their own columns, thresholds, and patterns in a small TOML/JSON config, every issue points at the affected line numbers (never cell values), and the same gate runs as a pre-commit hook or a GitHub Action. It is stdlib-only: no third-party runtime dependencies.
 
