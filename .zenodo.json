@@ -3,7 +3,7 @@
   "description": "csv-quality-gate is a data quality gate that validates CSV inputs (missing required columns, empty files, duplicate rows, empty required cells, and junk contact rows via the outreach profile) and returns pass / warn / fail with matching exit codes, so a broken CSV is caught before a batch or pipeline run wastes time on bad data. Stdlib-only, no third-party runtime dependencies.",
   "upload_type": "software",
   "version": "0.3.1",
-  "license": "MIT",
+  "license": "Apache-2.0",
   "creators": [
     {
       "name": "Bosch Rodriguez, Rolando",

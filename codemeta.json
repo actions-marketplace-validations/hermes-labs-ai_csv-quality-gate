@@ -5,7 +5,7 @@
   "description": "csv-quality-gate is a command-line data quality gate that runs CSV preflight validation, failing fast before an ML or LLM pipeline ingests broken, incomplete, duplicated, or junk input. It checks missing columns, empty files, empty cells, and duplicate rows, returning pass, warn, or fail with matching exit codes. Stdlib-only, CI-ready.",
   "codeRepository": "https://github.com/hermes-labs-ai/csv-quality-gate",
   "version": "0.3.1",
-  "license": "https://spdx.org/licenses/MIT",
+  "license": "https://spdx.org/licenses/Apache-2.0",
   "programmingLanguage": "Python",
   "runtimePlatform": "Python >=3.10",
   "author": [{"@type": "Person", "givenName": "Rolando", "familyName": "Bosch Rodriguez", "identifier": "https://orcid.org/0009-0005-4896-1112"}],

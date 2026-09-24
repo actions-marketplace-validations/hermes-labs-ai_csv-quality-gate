@@ -11,7 +11,7 @@ Hermes Labs is an agentic infrastructure company building the reliability layer 
 [![CI](https://github.com/hermes-labs-ai/csv-quality-gate/actions/workflows/ci.yml/badge.svg)](https://github.com/hermes-labs-ai/csv-quality-gate/actions/workflows/ci.yml)
 [![PyPI](https://img.shields.io/pypi/v/csv-quality-gate.svg)](https://pypi.org/project/csv-quality-gate/)
 [![Python](https://img.shields.io/pypi/pyversions/csv-quality-gate.svg)](https://pypi.org/project/csv-quality-gate/)
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![License: Apache-2.0](https://img.shields.io/badge/License-Apache--2.0-blue.svg)](LICENSE)
 
 </div>
 
@@ -394,7 +394,7 @@ Browse the [open-source catalog](https://hermes-labs.ai/open-source) or contact 
 
 ## License
 
-MIT — see [LICENSE](LICENSE).
+Apache-2.0 — see [LICENSE](LICENSE).
 
 ## Citation
 
