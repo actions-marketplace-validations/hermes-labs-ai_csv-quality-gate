@@ -8,9 +8,9 @@ jobs:
   validate-csv:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+      - id: csv_gate
+        uses: hermes-labs-ai/csv-quality-gate@0b7bf4635b2db468620855e577cd0d9f09f09ec7 # hardened current main
         with:
-          python-version: "3.11"
-      - run: pip install csv-quality-gate
-      - run: csv-quality-gate check data/leads.csv --profile outreach
+          csv-path: data/leads.csv
+          profile: outreach

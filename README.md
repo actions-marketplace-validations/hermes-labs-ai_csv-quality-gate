@@ -1,11 +1,19 @@
-# csv-quality-gate
+<div align="center">
+
+<h1>csv-quality-gate</h1>
+
+csv-quality-gate is a command-line data quality gate that runs CSV preflight validation, failing fast before a pipeline ingests broken, incomplete, duplicated, or junk input.
+
+csv-quality-gate is developed by [Hermes Labs](https://hermes-labs.ai).
+
+Hermes Labs is an agentic infrastructure company building the reliability layer for autonomous systems.
 
 [![CI](https://github.com/hermes-labs-ai/csv-quality-gate/actions/workflows/ci.yml/badge.svg)](https://github.com/hermes-labs-ai/csv-quality-gate/actions/workflows/ci.yml)
 [![PyPI](https://img.shields.io/pypi/v/csv-quality-gate.svg)](https://pypi.org/project/csv-quality-gate/)
 [![Python](https://img.shields.io/pypi/pyversions/csv-quality-gate.svg)](https://pypi.org/project/csv-quality-gate/)
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![License: Apache-2.0](https://img.shields.io/badge/License-Apache--2.0-blue.svg)](LICENSE)
 
-csv-quality-gate is a command-line data quality gate that runs CSV preflight validation, failing fast before a pipeline ingests broken, incomplete, duplicated, or junk input.
+</div>
 
 It runs batch quality checks on a CSV and returns `pass`, `warn`, or `fail` (with matching exit codes) before expensive pipeline steps burn time on bad input. It checks for missing required columns, empty files, empty critical cells, duplicate rows, and — under the `outreach` profile — suspicious company-name patterns. Teams can declare their own columns, thresholds, and patterns in a small TOML/JSON config, every issue points at the affected line numbers (never cell values), and the same gate runs as a pre-commit hook or a GitHub Action. It is stdlib-only: no third-party runtime dependencies.
 
@@ -61,17 +69,11 @@ The first command exits `0` with `PASS`; the second exits `2` with bounded
 line-number evidence for the broken rows. This gives a first-use check without
 creating a sample CSV or guessing which profile and config to choose.
 
-## Install
+## Development installation
 
-```bash
-pip install csv-quality-gate
-```
-
-For development:
-
-```bash
-pip install -e ".[dev]"
-```
+For everyday use, follow the [Quickstart](#quickstart-60-seconds) above. For a
+source checkout, editable install, and lint/test commands, see
+[Development](#development) below.
 
 ### As an agent skill (Claude Code, Codex CLI, Gemini CLI)
 
@@ -100,7 +102,7 @@ What each host reads:
 
 Installing the skill does not install the Python package. The skill uses an
 installed `csv-quality-gate` or runs the pinned release with
-`uvx csv-quality-gate==0.3.0`.
+`uvx csv-quality-gate==0.3.1`.
 
 ## Usage
 
@@ -259,7 +261,7 @@ your `.pre-commit-config.yaml` (full example in
 ```yaml
 repos:
   - repo: https://github.com/hermes-labs-ai/csv-quality-gate
-    rev: v0.3.0
+    rev: v0.3.1
     hooks:
       - id: csv-quality-gate
         args: [--profile, outreach]
@@ -299,17 +301,33 @@ outputs remain available even when the Action exits with a warning or failure.
 
 ```yaml
 - id: csv_gate
-  uses: hermes-labs-ai/csv-quality-gate@v0.3.0
+  uses: hermes-labs-ai/csv-quality-gate@0b7bf4635b2db468620855e577cd0d9f09f09ec7 # hardened current main; annotations + batch
   with:
     csv-path: data/leads.csv
     profile: leads
     config: csv-quality-gate.toml   # optional; omit to use built-in profiles
+    annotate: true                  # optional; defaults to false
 
 - run: echo "${{ steps.csv_gate.outputs.status }}"
 ```
 
-The only inputs are `csv-path`, `profile`, and the optional `config` file path;
-the Action deliberately accepts no free-form command or shell arguments. It
+For a batch, use `csv-paths` with one path per line instead. Set exactly one of
+`csv-path` and `csv-paths`; the Action deliberately accepts no free-form command
+or shell arguments.
+
+```yaml
+- id: csv_gate_batch
+  uses: hermes-labs-ai/csv-quality-gate@0b7bf4635b2db468620855e577cd0d9f09f09ec7 # hardened current main; batch support
+  with:
+    csv-paths: |
+      data/leads.csv
+      data/customers.csv
+    profile: generic
+```
+
+The single-file receipt remains a JSON object. A batch receipt is a JSON array
+in the same order as `csv-paths`, and its status and exit code reflect the worst
+file. The Action
 returns the same exit codes as the CLI: `0` for pass, `1` for warn, and `2` for
 fail. The receipt contains the same bounded evidence as `--json`, so it is safe
 to upload as a workflow artifact.
@@ -329,7 +347,14 @@ parallel in the same workspace. The Action validates the package's existing CSV
 heuristics only; it does not add schema inference, semantic verification, or
 arbitrary CLI options.
 
-A ready-to-copy install-based workflow also lives in
+Set `annotate: true` to add up to 50 GitHub Actions warnings or errors at the
+receipt-backed CSV file and physical row. The annotations use the gate's existing
+bounded evidence only and omit cell values, issue messages, and column names.
+Paths outside the checked-out workspace and issues without row evidence are not
+annotated. Receipts larger than 1 MiB are skipped without changing the gate's
+status. This is an advisory location aid, not a security or SARIF report.
+
+A ready-to-copy, commit-pinned composite Action workflow also lives in
 [`examples/github-action.yml`](examples/github-action.yml).
 
 ### GitHub Marketplace
@@ -338,8 +363,7 @@ A ready-to-copy install-based workflow also lives in
 description, author, branding). Listing is a maintainer step taken on the GitHub
 release form, not something the repository does on its own; the steps are in
 [Releasing](CONTRIBUTING.md#releasing). Whether you reach the Action through
-Marketplace or this repository, the `uses:` line above is the same: pin a
-release tag (`@v0.3.0`) or a commit SHA.
+Marketplace or this repository, use a full commit SHA in the `uses:` line.
 
 ## Recipes
 
@@ -360,19 +384,17 @@ python3 -m pytest -q
 pre-commit try-repo . csv-quality-gate --files tests/fixtures/clean.csv   # optional hook smoke test
 ```
 
-## Part of the Hermes Labs reliability stack
+## Where it fits
 
-csv-quality-gate is part of the [Hermes Labs](https://github.com/hermes-labs-ai) reliability stack — open-source tools that catch silent failure modes in production AI and data pipelines. csv-quality-gate guards the data that goes into a pipeline; it is complementary to, not a replacement for, the agent- and prompt-level tools in the stack.
+csv-quality-gate guards the data that goes into a pipeline; it is complementary to, not a replacement for, agent- and prompt-level reliability tools.
 
-## About Hermes Labs
-
-[Hermes Labs](https://hermes-labs.ai) is an AI reliability engineering studio for product and engineering teams shipping production agents and LLM applications. We find the structural AI failures standard evals miss, then harden retrieval, memory, agents, and the language layers around production AI systems with runtime controls and defensible evidence.
+## More from Hermes Labs
 
 Browse the [open-source catalog](https://hermes-labs.ai/open-source) or contact [roli@hermes-labs.ai](mailto:roli@hermes-labs.ai).
 
 ## License
 
-MIT — see [LICENSE](LICENSE).
+Apache-2.0 — see [LICENSE](LICENSE).
 
 ## Citation
 

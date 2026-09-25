@@ -8,7 +8,7 @@ version = "0.3.1"
 description = "CSV preflight validation and batch CSV quality checks that fail fast before pipeline runs."
 readme = "README.md"
 requires-python = ">=3.10"
-license = "MIT"
+license = "Apache-2.0"
 license-files = ["LICENSE"]
 authors = [{name = "Rolando Bosch"}]
 keywords = ["csv preflight validation", "batch CSV quality checks", "fail fast", "pipeline validation", "csv lint"]
@@ -17,6 +17,8 @@ classifiers = [
   "Intended Audience :: Developers",
   "Programming Language :: Python :: 3",
   "Programming Language :: Python :: 3 :: Only",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
   "Topic :: Software Development :: Quality Assurance",
 ]
 

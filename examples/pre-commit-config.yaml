@@ -2,7 +2,7 @@
 #   pip install pre-commit && pre-commit install
 repos:
   - repo: https://github.com/hermes-labs-ai/csv-quality-gate
-    rev: v0.3.0
+    rev: v0.3.1
     hooks:
       - id: csv-quality-gate
         # Built-in profile:
